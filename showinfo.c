@@ -12,6 +12,11 @@ static int block = 10;
 
 static struct nvm_dev *dev;
 
+int open_geo()
+{
+	dev = nvm_dev_open(nvm_dev_path);	
+	return 1;
+}
 
 int show_geo(void)
 {
@@ -21,6 +26,7 @@ int show_geo(void)
 
 int main(void)
 {
+	open_geo();
 	show_geo();
 	return 1;
 }
