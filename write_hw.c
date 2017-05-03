@@ -21,8 +21,8 @@ int setup()
         }
         geo = nvm_dev_get_geo(dev);
         lun_addr.ppa = 0;
-        lun_addr.g.ch = 0;
-        lun_addr.g.lun = 0;
+        lun_addr.g.ch = 2;
+        lun_addr.g.lun = 5;
         return nvm_addr_check(lun_addr, geo);
 }
 
@@ -48,9 +48,20 @@ int write_function(struct nvm_addr write_nvm)
 		teardown();
 		exit(-1);
 	}
+	printf("1\n");
 	memcpy(w_buf, test_str, strlen(test_str));
-	res = nvm_addr_write(dev, &write_nvm, 1, w_buf, NULL, pmode, &ret );
-	
+	res = nvm_addr_erase(dev, &write_nvm, geo->nplanes, pmode, &ret);
+	if(res < 0){
+		printf("fail to erase\n");
+		nvm_ret_pr(&ret);
+		free(w_buf);
+                teardown();
+                exit(-2);
+			
+	}
+	write_nvm.g.sec = 0;
+	res = nvm_addr_write(dev, &write_nvm, geo->nplanes * geo->nsectors, w_buf, NULL, pmode, &ret );
+	printf("2\n");
 	if(res < 0)
 	{
 		printf("fail to write\n");
@@ -70,7 +81,7 @@ int test_write()
 	write_addr.ppa = lun_addr.ppa;
 	write_addr.g.ch = lun_addr.g.ch;
 	write_addr.g.pl = 1;
-	write_addr.g.blk = 1;
+	write_addr.g.blk = 2;
 	write_addr.g.pg = 1;	
 	write_function(write_addr);
 }

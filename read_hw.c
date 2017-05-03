@@ -39,6 +39,7 @@ int read_function(struct nvm_addr read_nvm)
 	char *r_buf = NULL;
 	ssize_t res;
 
+	printf("1\n");
 	r_buf = nvm_buf_alloc(geo, geo->sector_nbytes);
 	if(r_buf == NULL)
 	{
@@ -47,8 +48,9 @@ int read_function(struct nvm_addr read_nvm)
 		teardown();
 		exit(-1);
 	}
+	printf("2\n");
 	res = nvm_addr_read(dev, &read_nvm, 1, r_buf, NULL, pmode, &ret );
-	
+	printf("3\n");
 	if(res < 0)
 	{
 		printf("fail to read\n");

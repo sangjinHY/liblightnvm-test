@@ -62,6 +62,7 @@ int rw_to_ocs(struct nvm_addr *addr, int length)
 //    nvm_buf_fill(buf, length*geo->sector_nbytes);
 //erase
     printf("Write sting:%d\n", (int)strlen(buf));
+    
     res = nvm_addr_erase(dev, addr, length, pmode, &ret);
     if(res < 0){
         error_exit(buf, NULL);
@@ -69,7 +70,7 @@ int rw_to_ocs(struct nvm_addr *addr, int length)
         exit(-1);
     }
 //write
-   /* 
+//    addr->g.pg = 1;
     res = nvm_addr_write(dev, addr, length, buf, NULL, pmode, &ret);
     printf("%s\n",buf);
     printf("res=%d\n", res);
@@ -77,7 +78,7 @@ int rw_to_ocs(struct nvm_addr *addr, int length)
         error_exit(buf, NULL);
         printf("write error\n");
         exit(-1);
-    }*/
+    }
 //read
     r_buf = nvm_buf_alloc(geo, 2*length*geo->sector_nbytes);
     if(!r_buf){
