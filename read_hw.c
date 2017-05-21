@@ -36,11 +36,12 @@ int read_function(struct nvm_addr read_nvm)
 {
 	struct nvm_ret ret;
 	int pmode = NVM_FLAG_PMODE_SNGL; //set the option mode
+	struct nvm_addr addrs[1];
 	char *r_buf = NULL;
 	ssize_t res;
 
 	printf("1\n");
-	r_buf = nvm_buf_alloc(geo, geo->sector_nbytes);
+	r_buf = nvm_buf_alloc(geo, 4*geo->sector_nbytes);
 	if(r_buf == NULL)
 	{
 		printf("Fail alloc r_buf\n");
@@ -49,6 +50,11 @@ int read_function(struct nvm_addr read_nvm)
 		exit(-1);
 	}
 	printf("2\n");
+	addrs[0].ppa = lun_addr.ppa;
+	addrs[0].g.blk = 0;
+	addrs[0].g.pg = 0;
+	addrs[0].g.pl = 0;
+	addrs[0].g.sec = 0;
 	res = nvm_addr_read(dev, &read_nvm, 1, r_buf, NULL, pmode, &ret );
 	printf("3\n");
 	if(res < 0)
@@ -70,9 +76,9 @@ int test_read()
 	struct nvm_addr read_addr;
 	read_addr.ppa = lun_addr.ppa;
 	read_addr.g.ch = lun_addr.g.ch;
-	read_addr.g.pl = 1;
-	read_addr.g.blk = 1;
-	read_addr.g.pg = 1;	
+	read_addr.g.pl = 0;
+	read_addr.g.blk = 0;
+	read_addr.g.pg = 0;	
 	read_function(read_addr);
 }
 
