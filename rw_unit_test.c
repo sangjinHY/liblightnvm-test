@@ -25,7 +25,7 @@ int setup(){
     lun_addr.ppa = 0;
     lun_addr.g.ch = 0;
     lun_addr.g.lun = 0;
-    lun_addr.g.blk = 30;
+    lun_addr.g.blk = 0;
     return nvm_addr_check(lun_addr, geo);
 }
 
