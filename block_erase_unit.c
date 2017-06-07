@@ -44,7 +44,7 @@ void buf_fill(char *buf, int length, char flag){
 }
 
 int test(int pg_num){
-    struct nvm_addr addrs[pg * geo -> nsectors];
+    struct nvm_addr addrs[pg_num * geo -> nsectors];
     struct nvm_ret ret;
     char *w_buf_pg1 = NULL;
     char *w_buf_pg2 = NULL;
@@ -165,7 +165,7 @@ int test(int pg_num){
 ////                             erase a block                                  ////
 ////////////////////////////////////////////////////////////////////////////////////
     printf("---------------------erase the block that pg1 located-------------------------\n");
-    res = nvm_addr_erase(dev, addrs, geo->nplanes, pmode, &ret); //erase the block that pg 1 located
+    res = nvm_addr_erase(dev, addrs, 1, pmode, &ret); //erase the block that pg 1 located
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
