@@ -174,3 +174,10 @@ int test(){
     else
         printf("read pg succeed!\n");
 }
+
+int main(){
+    setup();
+    test();
+    teardown();
+    return 0;
+}

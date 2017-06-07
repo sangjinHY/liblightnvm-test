@@ -227,5 +227,6 @@ int test(int pg_num){
 int main(){
     setup();
     test(2);
+    teardown();
     return 0;
 }
