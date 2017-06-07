@@ -130,7 +130,7 @@ int test(){
         printf("read sec succeed!\n");
 
     if(memcmp(r_buf, w_buf, geo->nsectors * geo->sector_nbytes) != 0){
-        printf("read sector and compare pg reference error!");
+        printf("read sector and compare pg reference error!\n");
     }
     else
         printf("read sec and compare pg reference succeed!\n");
@@ -154,6 +154,7 @@ int test(){
     }
     else
         printf("Write a sector succeed!\n");
+    memset(r_buf, 0, geo->nsectors * geo->sector_nbytes);
     res = nvm_addr_read(dev, addrs, 1, r_buf, NULL, pmode, &ret );
     if(res < 0) {
         printf("fail to read sector\n");
