@@ -45,6 +45,7 @@ void buf_fill(char *buf, int length, char flag){
 
 int test(int pg_num){
     struct nvm_addr addrs[pg * geo -> nsectors];
+    struct nvm_ret ret;
     char *w_buf_pg1 = NULL;
     char *w_buf_pg2 = NULL;
     char *r_buf = NULL;
@@ -57,7 +58,9 @@ int test(int pg_num){
     if(w_buf_pg1 == NULL || w_buf_pg2 == NULL || r_buf == NULL)
     {
         printf("Fail alloc buf\n");
-        free(w_buf);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
         teardown();
         exit(-1);
     }
@@ -74,24 +77,28 @@ int test(int pg_num){
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
-        free(w_buf);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
         teardown();
         exit(-2);
     }
 ////////////////////////////////////////////////////////////////////////////////////
 ////                write the page that we want to write                        ////
 ////////////////////////////////////////////////////////////////////////////////////
-    for(i = 0; i < pg_num * geo->nesectors; i++){
+    for(i = 0; i < pg_num * geo->nsectors; i++){
         addrs[i].ppa = lun_addr.ppa;
         addrs[i].g.pg = 10;
-        addrs[i].g.pl = i / geo->nesectors;
-        addrs[i].g.sec = i % geo->nesectors;
+        addrs[i].g.pl = i / geo->nsectors;
+        addrs[i].g.sec = i % geo->nsectors;
     }
     nvm_addr_write(dev, addrs, geo->nsectors, w_buf_pg1, NULL, pmode, &ret);//write pg 1
     if(res < 0){
         printf("fail to write pg 1\n");
         nvm_ret_pr(&ret);
-        free(w_buf);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
         teardown();
         exit(-2);
     }
@@ -99,7 +106,9 @@ int test(int pg_num){
     if(res < 0){
         printf("fail to write pg 2\n");
         nvm_ret_pr(&ret);
-        free(w_buf);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
         teardown();
         exit(-2);
     }
@@ -107,18 +116,22 @@ int test(int pg_num){
 ////                read the page that we wrote                                 ////
 ////////////////////////////////////////////////////////////////////////////////////
     printf("---------------------read-------------------------\n");
-    memset(r_buf, 0, geo->nsectors * geo->geo->sector_nbytes);
+    memset(r_buf, 0, geo->nsectors * geo->sector_nbytes);
     res = nvm_addr_read(dev, addrs, geo->nsectors, r_buf, NULL, pmode, &ret );
     if(res < 0) {
         printf("fail to read\n");
         nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-2);
     }
-    if(memcmp(r_buf, w_buf_pg1, geo->nsectors * geo->geo->sector_nbytes) != 0){
+    if(memcmp(r_buf, w_buf_pg1, geo->nsectors * geo->sector_nbytes) != 0){
         printf("write pg 1 and read it error!");
         nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-3);
@@ -126,18 +139,22 @@ int test(int pg_num){
     else
         printf("read pg 1 succeed!\n");
 
-    memset(r_buf, 0, geo->nsectors * geo->geo->sector_nbytes);
+    memset(r_buf, 0, geo->nsectors * geo->sector_nbytes);
     res = nvm_addr_read(dev, addrs + geo->nsectors, geo->nsectors, r_buf, NULL, pmode, &ret );
     if(res < 0) {
         printf("fail to read\n");
         nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-2);
     }
-    if(memcmp(r_buf, w_buf_pg2, geo->nsectors * geo->geo->sector_nbytes) != 0){
+    if(memcmp(r_buf, w_buf_pg2, geo->nsectors * geo->sector_nbytes) != 0){
         printf("write pg 1 and read it error!");
         nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-3);
@@ -152,23 +169,29 @@ int test(int pg_num){
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
-        free(w_buf);
-        teardown();
-        exit(-2);
-    }
-    printf("---------------------read pg 2-------------------------\n");
-    memset(r_buf, 0, geo->nsectors * geo->geo->sector_nbytes);
-    res = nvm_addr_read(dev, addrs + geo->nsectors, geo->nsectors, r_buf, NULL, pmode, &ret );
-    if(res < 0) {
-        printf("fail to read\n");
-        nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-2);
     }
-    if(memcmp(r_buf, w_buf_pg2, geo->nsectors * geo->geo->sector_nbytes) != 0){
+    printf("---------------------read pg 2-------------------------\n");
+    memset(r_buf, 0, geo->nsectors * geo->sector_nbytes);
+    res = nvm_addr_read(dev, addrs + geo->nsectors, geo->nsectors, r_buf, NULL, pmode, &ret );
+    if(res < 0) {
+        printf("fail to read\n");
+        nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
+        teardown();
+        exit(-2);
+    }
+    if(memcmp(r_buf, w_buf_pg2, geo->nsectors * geo->sector_nbytes) != 0){
         printf("write pg 1 and read it error!");
         nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
         free(r_buf);
         teardown();
         exit(-3);
