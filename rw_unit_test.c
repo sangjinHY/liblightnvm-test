@@ -63,7 +63,7 @@ int test(){
         addrs[i].ppa = lun_addr.ppa;
         addrs[i].g.pl = 0;
         addrs[i].g.sec = i;
-        addrs[i].g.pg = 10;
+        addrs[i].g.pg = 0;
     }
 
     res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
@@ -153,7 +153,7 @@ int test(){
         addrs[i].ppa = lun_addr.ppa;
         addrs[i].g.pl = 0;
         addrs[i].g.sec = i;
-        addrs[i].g.pg = 10;
+        addrs[i].g.pg = 0;
     }
     nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
     if(res < 0){
