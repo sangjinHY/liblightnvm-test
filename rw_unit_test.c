@@ -25,7 +25,7 @@ int setup(){
     lun_addr.ppa = 0;
     lun_addr.g.ch = 0;
     lun_addr.g.lun = 0;
-    lun_addr.g.blk = 30;
+    lun_addr.g.blk = 0;
     return nvm_addr_check(lun_addr, geo);
 }
 
@@ -55,7 +55,6 @@ int test(){
     r_buf = nvm_buf_alloc(geo, geo->nsectors * geo->sector_nbytes);
 
     buf_fill(w_buf, geo->nsectors * geo->sector_nbytes, 'a');
-
 ////////////////////////////////////////////////////////////////////////////////////
 ////                erase the block that we want to write                       ////
 ////////////////////////////////////////////////////////////////////////////////////

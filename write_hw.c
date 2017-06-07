@@ -72,7 +72,7 @@ int write_function(struct nvm_addr write_nvm)
 		addrs[i].g.sec = i % geo->nsectors;
 		addrs[i].g.pl = 0;
 	}
-	res = nvm_addr_write(dev, addrs, 4, w_buf, NULL, pmode, &ret );
+	res = nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret );
 	printf("2\n");
 	if(res < 0)
 	{
