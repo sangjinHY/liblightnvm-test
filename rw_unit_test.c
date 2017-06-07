@@ -48,6 +48,7 @@ int test(){
     int pmode = NVM_FLAG_PMODE_SNGL;
     char *w_buf;
     char *r_buf;
+    int res;
     int i;
 
     w_buf = nvm_buf_alloc(geo, geo->nsectors * geo->sector_nbytes);
@@ -101,8 +102,7 @@ int test(){
     if(memcmp(r_buf, w_buf, geo->nsectors * geo->sector_nbytes) != 0){
         printf("write pg and read it error!");
         nvm_ret_pr(&ret);
-        free(w_buf_pg1);
-        free(w_buf_pg2);
+        free(w_buf);
         free(r_buf);
         teardown();
         exit(-3);
