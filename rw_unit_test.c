@@ -155,7 +155,7 @@ int test(){
         addrs[i].g.sec = i;
         addrs[i].g.pg = 0;
     }
-    nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
+    res = nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
     if(res < 0){
         printf("fail to write a pg\n");
         nvm_ret_pr(&ret);
