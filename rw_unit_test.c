@@ -43,7 +43,7 @@ void buf_fill(char *buf, int length, char flag){
 }
 
 int test(){
-    struct nvm_addr addrs_pg[geo->nsectors];
+    struct nvm_addr addrs[geo->nsectors];
     struct nvm_ret ret;
     int pmode = NVM_FLAG_PMODE_SNGL;
     char *w_buf;
@@ -163,7 +163,7 @@ int test(){
         teardown();
         exit(-2);
     }
-    if(memcmp(r_buf, w_buf_pg1, geo->sector_nbytes) != 0){
+    if(memcmp(r_buf, w_buf, geo->sector_nbytes) != 0){
         printf("write pg and read it error!");
         nvm_ret_pr(&ret);
         free(w_buf);
