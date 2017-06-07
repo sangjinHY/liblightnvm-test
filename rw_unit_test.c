@@ -138,7 +138,7 @@ int test(){
 
     printf("------------------unit is sector(Write)-------------------\n");
     for(i = 0; i < geo->nplanes; i++){
-        addrs[i].ppa = lun_addr;
+        addrs[i].ppa = lun_addr.ppa;
         addrs[i].g.pl = i;
     }
     res = nvm_addr_erase(dev, addrs, geo->nplanes, pmode, &ret);
@@ -148,7 +148,7 @@ int test(){
         teardown();
         exit(-2);
     }
-    
+
     for(i = 0; i < geo->nsectors; i++){
         addrs[i].ppa = lun_addr.ppa;
         addrs[i].g.pl = 0;
