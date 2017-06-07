@@ -198,6 +198,29 @@ int test(int pg_num){
     }
     else
         printf("read pg 2 succeed!\n");
+    printf("---------------------read pg1-------------------------\n");
+    memset(r_buf, 0, geo->nsectors * geo->sector_nbytes);
+    res = nvm_addr_read(dev, addrs, geo->nsectors, r_buf, NULL, pmode, &ret );
+    if(res < 0) {
+        printf("fail to read\n");
+        nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
+        teardown();
+        exit(-2);
+    }
+    if(memcmp(r_buf, w_buf_pg1, geo->nsectors * geo->sector_nbytes) != 0){
+        printf("write pg 1 and read it error!");
+        nvm_ret_pr(&ret);
+        free(w_buf_pg1);
+        free(w_buf_pg2);
+        free(r_buf);
+        teardown();
+        exit(-3);
+    }
+    else
+        printf("read pg 1 succeed!\n");
     return 0;
 }
 
