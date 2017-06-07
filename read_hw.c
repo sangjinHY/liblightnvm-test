@@ -41,7 +41,7 @@ int read_function(struct nvm_addr read_nvm)
 	ssize_t res;
 
 	printf("1\n");
-	r_buf = nvm_buf_alloc(geo, 4*geo->sector_nbytes);
+	r_buf = nvm_buf_alloc(geo, geo->sector_nbytes);
 	if(r_buf == NULL)
 	{
 		printf("Fail alloc r_buf\n");
@@ -54,7 +54,7 @@ int read_function(struct nvm_addr read_nvm)
 	addrs[0].g.blk = 0;
 	addrs[0].g.pg = 0;
 	addrs[0].g.pl = 0;
-	addrs[0].g.sec = 0;
+	addrs[0].g.sec = 2;
 	res = nvm_addr_read(dev, &read_nvm, 1, r_buf, NULL, pmode, &ret );
 	printf("3\n");
 	if(res < 0)

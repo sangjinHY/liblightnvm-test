@@ -1,8 +1,0 @@
-TARGET:=test
-SRC_LIST := $(shell ls *.c)
-OBJ_LIST := $(patsubst %.c,%.o,$(SRC_LIST))
-TEST_LIST := $(basename $(OBJ_LIST))
-
-CC:=gcc
-CFLAGS:= -std=c99
-LDFLAGS:= -llightnvm
