@@ -137,24 +137,14 @@ int test(){
 
 
     printf("------------------unit is sector(Write)-------------------\n");
-    for(i = 0; i < geo->nplanes; i++){
-        addrs[i].ppa = lun_addr.ppa;
-        addrs[i].g.pl = i;
-    }
-    res = nvm_addr_erase(dev, addrs, geo->nplanes, pmode, &ret);
+    res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
         teardown();
         exit(-2);
     }
-
-    for(i = 0; i < geo->nsectors; i++){
-        addrs[i].ppa = lun_addr.ppa;
-        addrs[i].g.pl = 0;
-        addrs[i].g.sec = i;
-        addrs[i].g.pg = 0;
-    }
+    
     res = nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
     if(res < 0){
         printf("fail to write a sec\n");
