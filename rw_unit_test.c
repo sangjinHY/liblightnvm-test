@@ -60,10 +60,10 @@ int test(){
 ////                erase the block that we want to write                       ////
 ////////////////////////////////////////////////////////////////////////////////////
     for(i = 0; i < geo->nsectors; i++){
-        addrs_pg[i].ppa = lun_addr.ppa;
-        addrs_pg[i].g.pl = 0;
-        addrs_pg[i].g.sec = i;
-        addrs_pg[i].g.pg = 10;
+        addrs[i].ppa = lun_addr.ppa;
+        addrs[i].g.pl = 0;
+        addrs[i].g.sec = i;
+        addrs[i].g.pg = 10;
     }
 
     res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
