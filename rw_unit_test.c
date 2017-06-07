@@ -135,14 +135,26 @@ int test(){
     else
         printf("read sec and compare pg reference succeed!\n");
 
-    res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
+
+    printf("------------------unit is sector(Write)-------------------\n");
+    for(i = 0; i < geo->nplanes; i++){
+        addrs[i].ppa = lun_addr;
+        addrs[i].g.pl = i;
+    }
+    res = nvm_addr_erase(dev, addrs, geo->nplanes, pmode, &ret);
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
         teardown();
         exit(-2);
     }
-    printf("------------------unit is sector(Write)-------------------\n");
+    
+    for(i = 0; i < geo->nsectors; i++){
+        addrs[i].ppa = lun_addr.ppa;
+        addrs[i].g.pl = 0;
+        addrs[i].g.sec = i;
+        addrs[i].g.pg = 10;
+    }
     nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
     if(res < 0){
         printf("fail to write a pg\n");
