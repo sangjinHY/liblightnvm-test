@@ -221,7 +221,16 @@ int main(){
         w_addr[i].g.sec = i % geo->nsectors;
         w_addr[i].g.pl = 0;
     }
+    res = nvm_addr_erase(dev, w_addr, 1, pmode, &ret);
+    if(res < 0){
+        printf("fail to erase\n");
+        nvm_ret_pr(&ret);
+        free(w_buf);
+        teardown();
+        exit(-2);
 
+    }
+    
     e_addr.ppa = lun_addr.ppa;
     e_addr.g.pl = 1;
 
