@@ -230,9 +230,9 @@ int main(){
         exit(-2);
 
     }
-    
+
     e_addr.ppa = lun_addr.ppa;
-    e_addr.g.pl = 1;
+    e_addr.g.pl = 0;
 
     pthread_create(&pid_w, NULL, (void *)write_pg, w_addr);
     pthread_create(&pid_e, NULL, (void *)erase_blk, &e_addr);
