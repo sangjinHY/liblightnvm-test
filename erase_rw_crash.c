@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <time.h>
 #include <pthread.h>
 #include <liblightnvm.h>
@@ -135,7 +136,7 @@ void write_pg(void *w_addrs){
     w_end_t = get_time();
     pthread_mutex_unlock(&mutex);
     free(w_buf);
-    return 1;
+
 
 }
 
@@ -154,7 +155,7 @@ void erase_blk(void *e_addrs){
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
-        free(w_buf);
+
         teardown();
         exit(-2);
 
@@ -182,10 +183,10 @@ int main(){
 ////////////////////////////////////////////////////////////////////////////////////
     printf("-----------------erase block and write a page at different plane------------------\n");
     pthread_create(&pid_w, NULL, (void *)write_pg, w_addr);
-    pthread_create(&pid_e, NULL, (void *)erase_block, &e_addr);
+    pthread_create(&pid_e, NULL, (void *)erase_blk, &e_addr);
     sleep(1);
     flag = 0;
-    pthread_cond_broadcast(&cond);
+    pthread_cond_broadcast(&cond_l);
     pthread_join(pid_e, NULL);
     pthread_join(pid_w, NULL);
     printf("Write start time:%.6lf ms   end time:%.6lf ms\n", w_start_t * 1000, w_end_t * 1000);
@@ -205,15 +206,15 @@ int main(){
         w_addr[i].g.sec = i % geo->nsectors;
         w_addr[i].g.pl = 0;
     }
-    struct nvm_addr e_addr;
+
     e_addr.ppa = lun_addr.ppa;
     e_addr.g.pl = 1;
 
     pthread_create(&pid_w, NULL, (void *)write_pg, w_addr);
-    pthread_create(&pid_e, NULL, (void *)erase_block, &e_addr);
+    pthread_create(&pid_e, NULL, (void *)erase_blk, &e_addr);
     sleep(1);
     flag = 0;
-    pthread_cond_broadcast(&cond);
+    pthread_cond_broadcast(&cond_l);
     pthread_join(pid_e, NULL);
     pthread_join(pid_w, NULL);
     printf("Write start time:%.6lf ms   end time:%.6lf ms\n", w_start_t * 1000, w_end_t * 1000);
