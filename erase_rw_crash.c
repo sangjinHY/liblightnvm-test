@@ -179,6 +179,7 @@ int main(){
         w_addr[i].g.pg = 0;
         w_addr[i].g.sec = i % geo->nsectors;
         w_addr[i].g.pl = 0;
+        w_addr[i].g.blk = 10;
     }
     res = nvm_addr_erase(dev, w_addr, 1, pmode, &ret);
     if(res < 0){
@@ -220,6 +221,7 @@ int main(){
         w_addr[i].g.pg = 0;
         w_addr[i].g.sec = i % geo->nsectors;
         w_addr[i].g.pl = 0;
+        w_addr[i].g.blk = 10;
     }
     res = nvm_addr_erase(dev, w_addr, 1, pmode, &ret);
     if(res < 0){
@@ -232,7 +234,7 @@ int main(){
     }
 
     e_addr.ppa = lun_addr.ppa;
-    e_addr.g.pl = 0;
+    e_addr.g.pl = 1;
 
     pthread_create(&pid_w, NULL, (void *)write_pg, w_addr);
     pthread_create(&pid_e, NULL, (void *)erase_blk, &e_addr);
