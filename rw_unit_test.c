@@ -144,7 +144,7 @@ int test(){
         teardown();
         exit(-2);
     }
-    
+
     res = nvm_addr_write(dev, addrs, 1, w_buf, NULL, pmode, &ret);//write pg 1
     if(res < 0){
         printf("fail to write a sec\n");
