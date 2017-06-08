@@ -5,7 +5,7 @@ TEST_LIST := $(basename $(OBJ_LIST))
 
 CC:=gcc
 CFLAGS:= -std=c99
-LDFLAGSTEST:= -llightnvm
+LDFLAGSTEST:= -llightnvm -lpthread
 
 %.o:%.c
 	$(CC) $(LDFLAGSTEST) -c $<
