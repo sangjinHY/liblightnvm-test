@@ -108,7 +108,7 @@ void write_pg(void *w_addrs){
         addrs[i].g.sec = i % geo->nsectors;
         addrs[i].g.pl = 0;
     }*/
-    res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
+/*    res = nvm_addr_erase(dev, addrs, 1, pmode, &ret);
     if(res < 0){
         printf("fail to erase\n");
         nvm_ret_pr(&ret);
@@ -116,7 +116,7 @@ void write_pg(void *w_addrs){
         teardown();
         exit(-2);
 
-    }
+    }*/
     pthread_mutex_lock(&mutex);
     while(flag == 1){
         printf("Write pthread start!\n");
@@ -124,7 +124,7 @@ void write_pg(void *w_addrs){
     }
     w_start_t = get_time();
     res = nvm_addr_write(dev, addrs, 4, w_buf, NULL, pmode, &ret );
-    printf("2\n");
+//    printf("write\n");
     if(res < 0)
     {
         printf("fail to write\n");
@@ -165,6 +165,11 @@ void erase_blk(void *e_addrs){
 }
 
 int main(){
+    struct nvm_ret ret;
+    int pmode = NVM_FLAG_PMODE_SNGL; //set the option mode
+    char *w_buf = NULL;
+    ssize_t res;
+
     pthread_t pid_w;
     pthread_t pid_e;
     setup();
@@ -175,6 +180,16 @@ int main(){
         w_addr[i].g.sec = i % geo->nsectors;
         w_addr[i].g.pl = 0;
     }
+    res = nvm_addr_erase(dev, w_addr, 1, pmode, &ret);
+    if(res < 0){
+        printf("fail to erase\n");
+        nvm_ret_pr(&ret);
+        free(w_buf);
+        teardown();
+        exit(-2);
+
+    }
+
     struct nvm_addr e_addr;
     e_addr.ppa = lun_addr.ppa;
     e_addr.g.pl = 1;
