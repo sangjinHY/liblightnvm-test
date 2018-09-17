@@ -14,16 +14,19 @@ char *test_str = "Hello";
 
 int setup()
 {
+    //device open
 	dev = nvm_dev_open(nvm_dev_path);
         if (!dev) {
                 perror("nvm_dev_open");
                 return -1;
         }
+        //get geo
         geo = nvm_dev_get_geo(dev);
+        //set address
         lun_addr.ppa = 0;
         lun_addr.g.ch = 0;
         lun_addr.g.lun = 0;
-	lun_addr.g.blk = 0;
+	    lun_addr.g.blk = 0;
         return nvm_addr_check(lun_addr, geo);
 }
 
@@ -37,11 +40,12 @@ int teardown()
 int write_function(struct nvm_addr write_nvm)
 {
 	struct nvm_ret ret;
-	int pmode = NVM_FLAG_PMODE_SNGL; //set the option mode
+	int pmode = NVM_FLAG_PMODE_SNGL; //set the option mode - single
 	char *w_buf = NULL;
 	struct nvm_addr addrs[4];
 	ssize_t res;
 
+    //buf allocation
 	w_buf = nvm_buf_alloc(geo, 4*geo->sector_nbytes);
 	if(w_buf == NULL)
 	{
@@ -50,7 +54,7 @@ int write_function(struct nvm_addr write_nvm)
 		teardown();
 		exit(-1);
 	}
-	nvm_buf_fill(w_buf, 4*geo->sector_nbytes);
+	nvm_buf_fill(w_buf, geo->*geo->sector_nbytes);
 	printf("1\n");
 	for( int i = 0; i < geo -> nplanes; i++){
 		addrs[i].ppa = lun_addr.ppa;
@@ -92,7 +96,7 @@ int test_write()
 	struct nvm_addr write_addr;
 	write_addr.ppa = lun_addr.ppa;
 	write_addr.g.ch = lun_addr.g.ch;
-	write_addr.g.pl = 0;
+	write_addr.g.pl = 0;git re
 	write_addr.g.blk = 1;
 	write_addr.g.pg = 0;	
 	write_function(write_addr);
