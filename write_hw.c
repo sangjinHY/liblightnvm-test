@@ -96,7 +96,7 @@ int test_write()
 	struct nvm_addr write_addr;
 	write_addr.ppa = lun_addr.ppa;
 	write_addr.g.ch = lun_addr.g.ch;
-	write_addr.g.pl = 0;git re
+	write_addr.g.pl = 0;
 	write_addr.g.blk = 1;
 	write_addr.g.pg = 0;	
 	write_function(write_addr);
